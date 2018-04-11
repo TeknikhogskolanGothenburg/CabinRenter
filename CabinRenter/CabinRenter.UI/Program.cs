@@ -1,4 +1,5 @@
 ﻿using System;
+using CabinRenter.Data;
 
 namespace CabinRenter.UI
 {
@@ -7,9 +8,13 @@ namespace CabinRenter.UI
         static void Main(string[] args)
         {
 
+            var s = new Seeder(new CabinContext());
+            s.SeedDb();
 
 
             Console.WriteLine("Hello World!");
+            Console.ReadLine();
+
         }
     }
 }

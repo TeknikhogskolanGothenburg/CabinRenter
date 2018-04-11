@@ -14,13 +14,13 @@ namespace CabinRenter.Data
     {
 
 
-        public DbSet<CabinRenter.Domain.Address> Addresses { get; set; }
-        public DbSet<CabinRenter.Domain.Booking> Bookings { get; set; }
-        public DbSet<CabinRenter.Domain.ObjectType> ObjectTypes { get; set; }
-        public DbSet<CabinRenter.Domain.Person> Persons { get; set; }
-        public DbSet<CabinRenter.Domain.Photo> Photos { get; set; }
-        public DbSet<CabinRenter.Domain.RentalObject> RentalObjects { get; set; }
-        public DbSet<CabinRenter.Domain.Week> Weeks { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
+        public DbSet<ObjectType> ObjectTypes { get; set; }
+        public DbSet<Person> Persons { get; set; }
+        public DbSet<Photo> Photos { get; set; }
+        public DbSet<RentalObject> RentalObjects { get; set; }
+        public DbSet<Week> Weeks { get; set; }
 
         public static readonly LoggerFactory CabinLoggerFactory
             = new LoggerFactory(new[]
@@ -71,6 +71,17 @@ namespace CabinRenter.Data
             modelBuilder.Entity<RentalObjectWeek>().HasKey(x => new { x.RentalObjectId, x.WeekId });
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Person>()
+                .HasOne(p => p.Address)
+                .WithOne(a => a.Person)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<RentalObject>()
+                .HasOne(ro => ro.Address)
+                .WithOne(a => a.RentalObject)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
             modelBuilder.Entity<Booking>()
                 .Property(e => e.CreatedAt)
                 .HasField("_createdAt");
@@ -83,7 +94,7 @@ namespace CabinRenter.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder
-                .EnableSensitiveDataLogging()
+                //.EnableSensitiveDataLogging()
                 //.UseLoggerFactory(CabinLoggerFactory)
                 .UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=CabinRenterDb;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
         }
