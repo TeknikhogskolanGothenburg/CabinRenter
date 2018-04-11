@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -14,6 +15,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CabinRenter.Data\CabinRenter.Data.csproj" />
+    <ProjectReference Include="..\CabinRenter.Domain\CabinRenter.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Admin\Data\" />
   </ItemGroup>
 
 </Project>

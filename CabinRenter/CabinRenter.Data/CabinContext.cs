@@ -5,6 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using CabinRenter.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 
 namespace CabinRenter.Data
 {
@@ -14,13 +16,20 @@ namespace CabinRenter.Data
         public CabinContext(DbContextOptions<CabinContext> options) : base(options) { }
         public CabinContext() { }
 
-        public DbSet<Address> Addresses { get; set; }
-        public DbSet<Booking> Bookings { get; set; }
-        public DbSet<ObjectType> ObjectTypes { get; set; }
-        public DbSet<Person> Persons { get; set; }
-        public DbSet<Photo> Photos { get; set; }
-        public DbSet<RentalObject> RentalObjects { get; set; }
-        public DbSet<Week> Weeks { get; set; }
+        public DbSet<CabinRenter.Domain.Address> Addresses { get; set; }
+        public DbSet<CabinRenter.Domain.Booking> Bookings { get; set; }
+        public DbSet<CabinRenter.Domain.ObjectType> ObjectTypes { get; set; }
+        public DbSet<CabinRenter.Domain.Person> Persons { get; set; }
+        public DbSet<CabinRenter.Domain.Photo> Photos { get; set; }
+        public DbSet<CabinRenter.Domain.RentalObject> RentalObjects { get; set; }
+        public DbSet<CabinRenter.Domain.Week> Weeks { get; set; }
+
+        public static readonly LoggerFactory CabinLoggerFactory = new LoggerFactory(new[]
+        {
+            new ConsoleLoggerProvider((category, level)
+                => category == DbLoggerCategory.Database.Command.Name
+                && level == LogLevel.Information, true)
+        });
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
@@ -42,11 +51,11 @@ namespace CabinRenter.Data
                 if (entry.Entity is Booking booking)
                 {
                     var now = DateTime.UtcNow;
-                   
+
                     switch (entry.State)
                     {
                         case EntityState.Modified:
-                            entry.CurrentValues["LastUpdatedAt"] = now;;
+                            entry.CurrentValues["LastUpdatedAt"] = now;
                             break;
 
                         case EntityState.Added:
@@ -60,15 +69,15 @@ namespace CabinRenter.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<RentalObjectWeek>().HasKey(x => new { x.RentalObjectId, x.WeekId});
+            modelBuilder.Entity<RentalObjectWeek>().HasKey(x => new { x.RentalObjectId, x.WeekId });
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Booking>()
-                .Property(post => post.CreatedAt)
+                .Property(e => e.CreatedAt)
                 .HasField("_createdAt");
 
             modelBuilder.Entity<Booking>()
-                .Property(post => post.LastUpdatedAt)
+                .Property(e => e.LastUpdatedAt)
                 .HasField("_lastUpdatedAt");
         }
 

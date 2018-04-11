@@ -20,4 +20,10 @@
     <ProjectReference Include="..\CabinRenter.Domain\CabinRenter.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Microsoft.Extensions.Logging.Console">
+      <HintPath>..\..\..\..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.extensions.logging.console\2.0.0\lib\netstandard2.0\Microsoft.Extensions.Logging.Console.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

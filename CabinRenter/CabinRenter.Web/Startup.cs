@@ -24,8 +24,10 @@ namespace CabinRenter.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddDbContext<CabinContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<CabinContext>(options => options
+                .EnableSensitiveDataLogging()
+                .UseLoggerFactory(CabinContext.CabinLoggerFactory)
+                .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,6 +47,9 @@ namespace CabinRenter.Web
 
             app.UseMvc(routes =>
             {
+                routes.MapRoute(name: "areaRoute",
+                    template: "{area:exists}/{controller=Home}/{action=Index}");
+
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
