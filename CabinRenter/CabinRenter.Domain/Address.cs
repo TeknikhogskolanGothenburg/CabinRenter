@@ -11,13 +11,7 @@ namespace CabinRenter.Domain
         public string City { get; set; }
         public string ZipCode { get; set; }
         public string Country { get; set; }
-        public RentalObject RentalObject { get; set; }
-        public int RentalObjectId { get; set; }
+        public RentalObject RentalObject { get; set; }        
         public Person Person { get; set; }
-        public int? PersonId { get; set; }
-
-
-
-
     }
 }

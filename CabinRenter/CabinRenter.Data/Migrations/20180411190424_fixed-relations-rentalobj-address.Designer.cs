@@ -11,9 +11,10 @@ using System;
 namespace CabinRenter.Data.Migrations
 {
     [DbContext(typeof(CabinContext))]
-    partial class CabinContextModelSnapshot : ModelSnapshot
+    [Migration("20180411190424_fixed-relations-rentalobj-address")]
+    partial class fixedrelationsrentalobjaddress
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,11 +30,17 @@ namespace CabinRenter.Data.Migrations
 
                     b.Property<string>("Country");
 
+                    b.Property<int?>("PersonId");
+
                     b.Property<string>("StreetAddress");
 
                     b.Property<string>("ZipCode");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PersonId")
+                        .IsUnique()
+                        .HasFilter("[PersonId] IS NOT NULL");
 
                     b.ToTable("Addresses");
                 });
@@ -73,16 +80,11 @@ namespace CabinRenter.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("AddressId");
-
                     b.Property<string>("FirstName");
 
                     b.Property<string>("LastName");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AddressId")
-                        .IsUnique();
 
                     b.ToTable("Persons");
                 });
@@ -118,12 +120,16 @@ namespace CabinRenter.Data.Migrations
 
                     b.Property<int>("ObjectTypeId");
 
+                    b.Property<int>("PersonId");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AddressId")
                         .IsUnique();
 
                     b.HasIndex("ObjectTypeId");
+
+                    b.HasIndex("PersonId");
 
                     b.ToTable("RentalObjects");
                 });
@@ -161,19 +167,18 @@ namespace CabinRenter.Data.Migrations
                     b.ToTable("Weeks");
                 });
 
+            modelBuilder.Entity("CabinRenter.Domain.Address", b =>
+                {
+                    b.HasOne("CabinRenter.Domain.Person", "Person")
+                        .WithOne("Address")
+                        .HasForeignKey("CabinRenter.Domain.Address", "PersonId");
+                });
+
             modelBuilder.Entity("CabinRenter.Domain.Booking", b =>
                 {
                     b.HasOne("CabinRenter.Domain.Person", "Person")
                         .WithMany("Bookings")
                         .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("CabinRenter.Domain.Person", b =>
-                {
-                    b.HasOne("CabinRenter.Domain.Address", "Address")
-                        .WithOne("Person")
-                        .HasForeignKey("CabinRenter.Domain.Person", "AddressId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -195,6 +200,11 @@ namespace CabinRenter.Data.Migrations
                     b.HasOne("CabinRenter.Domain.ObjectType", "ObjectType")
                         .WithMany()
                         .HasForeignKey("ObjectTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("CabinRenter.Domain.Person", "Owner")
+                        .WithMany("RentalObjects")
+                        .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

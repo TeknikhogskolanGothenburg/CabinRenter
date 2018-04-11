@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CabinRenter.Data", "CabinRenter.Data\CabinRenter.Data.csproj", "{D1294C97-08E4-44CB-8F81-4A31A431E72E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CabinRenter.Data", "CabinRenter.Data\CabinRenter.Data.csproj", "{D1294C97-08E4-44CB-8F81-4A31A431E72E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CabinRenter.Domain", "CabinRenter.Domain\CabinRenter.Domain.csproj", "{84A254D1-BFF3-4AD5-9B15-32C8529D1824}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CabinRenter.Domain", "CabinRenter.Domain\CabinRenter.Domain.csproj", "{84A254D1-BFF3-4AD5-9B15-32C8529D1824}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CabinRenter.Web", "CabinRenter.Web\CabinRenter.Web.csproj", "{997CD7B5-B6D8-475A-934E-D8B758CA26DF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CabinRenter.UI", "CabinRenter.UI\CabinRenter.UI.csproj", "{6582DB4D-4E68-4F6F-B036-9BE7811B6FAF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{84A254D1-BFF3-4AD5-9B15-32C8529D1824}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84A254D1-BFF3-4AD5-9B15-32C8529D1824}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84A254D1-BFF3-4AD5-9B15-32C8529D1824}.Release|Any CPU.Build.0 = Release|Any CPU
-		{997CD7B5-B6D8-475A-934E-D8B758CA26DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{997CD7B5-B6D8-475A-934E-D8B758CA26DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{997CD7B5-B6D8-475A-934E-D8B758CA26DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{997CD7B5-B6D8-475A-934E-D8B758CA26DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6582DB4D-4E68-4F6F-B036-9BE7811B6FAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6582DB4D-4E68-4F6F-B036-9BE7811B6FAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6582DB4D-4E68-4F6F-B036-9BE7811B6FAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6582DB4D-4E68-4F6F-B036-9BE7811B6FAF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

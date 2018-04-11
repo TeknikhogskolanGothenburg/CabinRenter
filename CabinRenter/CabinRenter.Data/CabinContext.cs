@@ -13,8 +13,6 @@ namespace CabinRenter.Data
     public class CabinContext : DbContext
     {
 
-        public CabinContext(DbContextOptions<CabinContext> options) : base(options) { }
-        public CabinContext() { }
 
         public DbSet<CabinRenter.Domain.Address> Addresses { get; set; }
         public DbSet<CabinRenter.Domain.Booking> Bookings { get; set; }
@@ -24,12 +22,13 @@ namespace CabinRenter.Data
         public DbSet<CabinRenter.Domain.RentalObject> RentalObjects { get; set; }
         public DbSet<CabinRenter.Domain.Week> Weeks { get; set; }
 
-        public static readonly LoggerFactory CabinLoggerFactory = new LoggerFactory(new[]
-        {
-            new ConsoleLoggerProvider((category, level)
-                => category == DbLoggerCategory.Database.Command.Name
-                && level == LogLevel.Information, true)
-        });
+        public static readonly LoggerFactory CabinLoggerFactory
+            = new LoggerFactory(new[]
+            {
+                new ConsoleLoggerProvider((category, level)
+                    => category == DbLoggerCategory.Database.Command.Name
+                    && level == LogLevel.Information, true)
+            });
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
@@ -83,7 +82,10 @@ namespace CabinRenter.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //optionsBuilder.UseSqlServer("Data Source=EROL;Initial Catalog=CabinRenterDb;Integrated Security=True;Trusted Connection=True");
+            optionsBuilder
+                .EnableSensitiveDataLogging()
+                //.UseLoggerFactory(CabinLoggerFactory)
+                .UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=CabinRenterDb;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
         }
 
 

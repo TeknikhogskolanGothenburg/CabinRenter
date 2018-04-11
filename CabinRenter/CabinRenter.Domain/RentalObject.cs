@@ -14,9 +14,8 @@ namespace CabinRenter.Domain
 
         public int Id { get; set; }                
         public string Description { get; set; }
-        public Address Address { get; set; }
-        public int PersonId { get; set; }
-        public Person Owner { get; set; }
+        public int AddressId { get; set; }
+        public Address Address { get; set; }        
         public int ObjectTypeId { get; set; }
         public ObjectType ObjectType { get; set; }
         public ICollection<Photo> Photos { get; set; }

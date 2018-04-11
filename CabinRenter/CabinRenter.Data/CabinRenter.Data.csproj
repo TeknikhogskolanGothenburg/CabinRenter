@@ -8,6 +8,7 @@
     <Compile Remove="Migrations\20180410103659_Init.cs" />
     <Compile Remove="Migrations\20180410104349_added-tbl-photo-booking.cs" />
     <Compile Remove="Migrations\20180410110019_rentalobj-photo-objType-relation.cs" />
+    <Compile Remove="Migrations\20180411190613_person-address-relation-upd.cs" />
   </ItemGroup>
 
   <ItemGroup>

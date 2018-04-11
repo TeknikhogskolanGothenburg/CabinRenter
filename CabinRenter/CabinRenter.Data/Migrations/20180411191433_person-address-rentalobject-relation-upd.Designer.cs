@@ -11,9 +11,10 @@ using System;
 namespace CabinRenter.Data.Migrations
 {
     [DbContext(typeof(CabinContext))]
-    partial class CabinContextModelSnapshot : ModelSnapshot
+    [Migration("20180411191433_person-address-rentalobject-relation-upd")]
+    partial class personaddressrentalobjectrelationupd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
