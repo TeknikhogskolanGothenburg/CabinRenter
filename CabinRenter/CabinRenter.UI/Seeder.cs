@@ -18,50 +18,77 @@ namespace CabinRenter.UI
             _context = context;
         }
 
-        public async Task SeedDb()
+        /**
+         * 
+         * Valde att göra seed-metoderna Async för att man i teorin skulle
+         * kunna köra vidare med programmet om det är mycket data att ladda in.
+         *
+         */
+
+        public async Task SeedDb(bool seed = true)
         {
+            var dict = new Dictionary<string, int>();
+            if (seed)
+            {
 
-            ClearSeededData();
+                var objCount = await SeedObjectTypesAsync();
+                dict.Add("ObjectTypes added", objCount);
 
-            await SeedObjectTypes();
-            await SeedWeeks();
-            await SeedPersons();
-            await SeedRentalObjects();
+                var weekCount = await SeedWeeksAsync();
+                dict.Add("Weeks added", weekCount);
+
+                var personsCount = await SeedPersonsAsync();
+                dict.Add("Persons w/ address added", personsCount);
+
+                var rentalObjCount = await SeedRentalObjectsAsync();
+                dict.Add("RentalObject w/ address added", rentalObjCount);
+                Console.WriteLine("Seeding db...");
+            }
+            else
+            {
+                var clearCount = ClearSeededData();
+                dict.Add("Rows deleted", clearCount);
+            }
+
+            foreach (var item in dict)
+            {
+                Console.WriteLine(item.Key + ": " + item.Value);
+            }
 
 
-            //if (_context.RentalObjects.Any())
-            //{
-            //    return;
-            //}
+
         }
 
-        private static void ClearSeededData()
+        private static int ClearSeededData()
         {
             var ob = _context.ObjectTypes.Where(x => x.Id > 0).ToList();
             _context.ObjectTypes.RemoveRange(ob);
-            _context.SaveChanges();
 
             var w = _context.Weeks.Where(x => x.Id > 0).ToList();
             _context.Weeks.RemoveRange(w);
-            _context.SaveChanges();
 
             var p = _context.Persons.Where(x => x.Id > 0).ToList();
             _context.Persons.RemoveRange(p);
-            _context.SaveChanges();
-
 
             var a = _context.Addresses.Where(x => x.Id > 0).ToList();
             _context.Addresses.RemoveRange(a);
-            _context.SaveChanges();
+            var i = _context.SaveChanges();
 
 
+            //Reset Ids just so Re-seed will work with same Ids..
+            _context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Persons', RESEED, 0)");
+            _context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Weeks', RESEED, 0)");
+            _context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('ObjectTypes', RESEED, 0)");
+            _context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('RentalObjects', RESEED, 0)");
+
+            return i;
         }
 
 
-        private async Task SeedObjectTypes()
+        private async Task<int> SeedObjectTypesAsync()
         {
             if (_context.ObjectTypes.Any())
-                return;
+                return 0;
 
             var types = new List<ObjectType>
             {
@@ -72,13 +99,13 @@ namespace CabinRenter.UI
             };
 
             _context.AddRange(types);
-            await _context.SaveChangesAsync();
+            return await _context.SaveChangesAsync();
         }
 
-        private async Task SeedWeeks()
+        private async Task<int> SeedWeeksAsync()
         {
             if (_context.Weeks.Any())
-                return;
+                return 0;
 
             var weeks = new List<Week>();
 
@@ -101,13 +128,13 @@ namespace CabinRenter.UI
             }
 
             _context.Weeks.AddRange(weeks);
-            await _context.SaveChangesAsync();
+            return await _context.SaveChangesAsync();
         }
 
-        private async Task SeedPersons()
+        private async Task<int> SeedPersonsAsync()
         {
             if (_context.Persons.Any())
-                return;
+                return 0;
 
             var persons = new List<Person>
             {
@@ -157,28 +184,25 @@ namespace CabinRenter.UI
                         ZipCode ="55533",
                         City ="Beverly Hills",
                         Country ="USA"
-
                     }
                 }
             };
 
             _context.Persons.AddRange(persons);
-            await _context.SaveChangesAsync();
-
-
+            return await _context.SaveChangesAsync();
         }
 
-        private async Task SeedRentalObjects()
+        private async Task<int> SeedRentalObjectsAsync()
         {
             if (_context.RentalObjects.Any())
-                return;
+                return 0;
 
             var ro = new List<RentalObject>
             {
                 new RentalObject
                 {
                     Description = "nice wooden cabin in the mountains",
-                    ObjectTypeId = 9,
+                    ObjectTypeId = 1,
                     Address = new Address
                     {
                         StreetAddress ="stugvägen 1",
@@ -201,37 +225,141 @@ namespace CabinRenter.UI
                             Order = 2
                         }
                     },
-                    AvailableWeeks = new List<RentalObjectWeek>
-                    {
+                    AvailableWeeks = new List<RentalObjectWeek> {
                         new RentalObjectWeek
                         {
-                            
-                            WeekId = 388,
-                            Price = 8000
+                            WeekId = 73,
+                            Price = 10000,
 
                         },
                         new RentalObjectWeek
                         {
-                            
-                            WeekId = 387,
-                            Price = 8000
+                            WeekId = 74,
+                            Price = 10000,
 
-                        },
-                        new RentalObjectWeek
-                        {
-                            
-                            WeekId = 386,
-                            Price = 7500
                         }
                     }
-                    
+                },
+                new RentalObject
+                {
+                    Description = "Summerhouse on the beach",
+                    ObjectTypeId = 3,
+                    Address = new Address
+                    {
+                        StreetAddress = "Miami beach 1",
+                        ZipCode = "Miami",
+                        City = "Miami",
+                        Country = "USA"
+                    },
+                    Photos = new List<Photo>
+                    {
+                        new Photo
+                        {
+                            Title = "the beach",
+                            Path = "images/the_beach.jpg",
+                            Order = 1
+                        }
+                    },
+                    AvailableWeeks = new List<RentalObjectWeek> {
+                        new RentalObjectWeek
+                        {
+                            WeekId = 73,
+                            Price = 10000,
+
+                        },
+                        new RentalObjectWeek
+                        {
+                            WeekId = 74,
+                            Price = 10000,
+
+                        }
+                    }
+                },
+                 new RentalObject
+                {
+                    Description = "Apartment on the beach",
+                    ObjectTypeId = 3,
+                    Address = new Address
+                    {
+                        StreetAddress = "Miami beach 144",
+                        ZipCode = "Miami",
+                        City = "Miami",
+                        Country = "USA"
+                    },
+                    Photos = new List<Photo>
+                    {
+                        new Photo
+                        {
+                            Title = "the beach2",
+                            Path = "images/the_beach2.jpg",
+                            Order = 1
+                        }
+                    },
+                    AvailableWeeks = new List<RentalObjectWeek> {
+                        new RentalObjectWeek
+                        {
+                            WeekId = 73,
+                            Price = 10000,
+                            
+                        },
+                        new RentalObjectWeek
+                        {
+                            WeekId = 74,
+                            Price = 10000,
+
+                        }
+                    }
+                },
+                 new RentalObject
+                {
+                    Description = "Apartmentin miami",
+                    ObjectTypeId = 3,
+                    Address = new Address
+                    {
+                        StreetAddress = "Miami road 14",
+                        ZipCode = "Miami",
+                        City = "Miami",
+                        Country = "USA"
+                    },
+                    Photos = new List<Photo>
+                    {
+                        new Photo
+                        {
+                            Title = "the apartment",
+                            Path = "images/apartment.jpg",
+                            Order = 1
+                        }
+                    },
+                    AvailableWeeks = new List<RentalObjectWeek> {
+                        new RentalObjectWeek
+                        {
+                            WeekId = 71,
+                            Price = 10000,
+                            Booking = new Booking
+                            {
+                                PersonId = 2
+                            }
+
+                        },
+                        new RentalObjectWeek
+                        {
+                            WeekId = 72,
+                            Price = 10000,
+
+                        },
+                        new RentalObjectWeek
+                        {
+                            WeekId = 73,
+                            Price = 10000,
+
+                        }
+                    }
                 }
 
             };
-             _context.RentalObjects.AddRange(ro);
-             await _context.SaveChangesAsync();
+            _context.RentalObjects.AddRange(ro);
+            return await _context.SaveChangesAsync();
         }
-
 
     }
 }

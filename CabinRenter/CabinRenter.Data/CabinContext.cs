@@ -20,6 +20,7 @@ namespace CabinRenter.Data
         public DbSet<Person> Persons { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<RentalObject> RentalObjects { get; set; }
+        public DbSet<RentalObjectWeek> RentalObjectWeeks { get; set; }
         public DbSet<Week> Weeks { get; set; }
 
         public static readonly LoggerFactory CabinLoggerFactory
@@ -69,18 +70,7 @@ namespace CabinRenter.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<RentalObjectWeek>().HasKey(x => new { x.RentalObjectId, x.WeekId });
-            base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<Person>()
-                .HasOne(p => p.Address)
-                .WithOne(a => a.Person)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<RentalObject>()
-                .HasOne(ro => ro.Address)
-                .WithOne(a => a.RentalObject)
-                .OnDelete(DeleteBehavior.Cascade);
-
+            
 
             modelBuilder.Entity<Booking>()
                 .Property(e => e.CreatedAt)
@@ -89,13 +79,14 @@ namespace CabinRenter.Data
             modelBuilder.Entity<Booking>()
                 .Property(e => e.LastUpdatedAt)
                 .HasField("_lastUpdatedAt");
+            base.OnModelCreating(modelBuilder);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder
-                //.EnableSensitiveDataLogging()
-                //.UseLoggerFactory(CabinLoggerFactory)
+                .EnableSensitiveDataLogging()
+                .UseLoggerFactory(CabinLoggerFactory)
                 .UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=CabinRenterDb;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
         }
 
